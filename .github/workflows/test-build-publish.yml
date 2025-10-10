@@ -34,8 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     if: success() || failure()  # Continue running if other jobs fail
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
       - uses: pre-commit/action@v3.0.1
 
   test:
@@ -45,16 +45,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', '3.14t']
     steps:
       - name: Checkout kapitan recursively
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
       - name: Install poetry
         run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           cache: 'poetry'
           python-version: ${{ matrix.python-version }}
@@ -91,7 +91,7 @@ jobs:
           - linux/arm64
     steps:
       - name: Checkout kapitan recursively
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -133,7 +133,7 @@ jobs:
           - linux/arm64
     steps:
       - name: Checkout kapitan recursively
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
