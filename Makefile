@@ -127,8 +127,8 @@ test_python:
 .PHONY: test_coverage
 test_coverage:
 	@echo "===== Running Tests with Coverage ====="
-	poetry run coverage run --source=kapitan -m pytest
-	poetry run coverage report --fail-under=65 -m
+	poetry run coverage run
+	poetry run coverage report
 
 # Build Docker image
 .PHONY: build_docker
