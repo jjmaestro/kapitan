@@ -4,7 +4,8 @@ run-name: Docker Build for ${{ github.actor }} on branch ${{ github.ref_name }}
 
 env:
   DEFAULT_PYTHON_VERSION: '3.11'
-  PYTHON_VERSIONS: '["3.11", "3.12", "3.13", "3.14"]'
+  BUILD_PYTHON_VERSIONS: '["3.11", "3.12", "3.13", "3.14"]'
+  TEST_PYTHON_VERSIONS: '["3.11", "3.12", "3.13", "3.14", "3.14t"]'
   MISE_LOCKED: '1'
   DEFAULT_RUNNER: 'ubuntu-24.04'
 
@@ -41,7 +42,8 @@ jobs:
     # so keep this runner in sync with env.DEFAULT_RUNNER above.
     runs-on: ubuntu-24.04
     outputs:
-      python-versions: ${{ steps.set-matrix.outputs.python-versions }}
+      build-python-versions: ${{ steps.set-matrix.outputs.build-python-versions }}
+      test-python-versions: ${{ steps.set-matrix.outputs.test-python-versions }}
       platforms: ${{ steps.set-matrix.outputs.platforms }}
       runner: ${{ steps.set-matrix.outputs.runner }}
       default-python-version: ${{ steps.set-matrix.outputs.default-python-version }}
@@ -57,8 +59,12 @@ jobs:
             echo "default-image-name=kapitan"
 
             # JSON values need heredoc to handle embedded quotes
-            echo 'python-versions<<EOF'
-            echo '${{ env.PYTHON_VERSIONS }}'
+            echo 'build-python-versions<<EOF'
+            echo '${{ env.BUILD_PYTHON_VERSIONS }}'
+            echo 'EOF'
+
+            echo 'test-python-versions<<EOF'
+            echo '${{ env.TEST_PYTHON_VERSIONS }}'
             echo 'EOF'
 
             echo 'platforms<<EOF'
@@ -82,7 +88,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.setup.outputs.python-versions) }}
+        python-version: ${{ fromJson(needs.setup.outputs.test-python-versions) }}
     steps:
       - name: Checkout kapitan recursively
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -131,7 +137,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: ${{ fromJson(needs.setup.outputs.platforms) }}
-        python-version: ${{ fromJson(needs.setup.outputs.python-versions) }}
+        python-version: ${{ fromJson(needs.setup.outputs.build-python-versions) }}
     steps:
       - name: Checkout kapitan recursively
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -250,7 +256,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJson(needs.setup.outputs.python-versions) }}
+        python-version: ${{ fromJson(needs.setup.outputs.build-python-versions) }}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
