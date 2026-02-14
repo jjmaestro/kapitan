@@ -5,8 +5,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"compile tests"
-
 import contextlib
 import glob
 import io
@@ -23,7 +21,6 @@ from kapitan.cached import reset_cache
 from kapitan.cli import main as kapitan
 from kapitan.inventory import InventoryBackends
 from kapitan.utils import directory_hash
-
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +53,6 @@ class CompileTestResourcesTestObjs(unittest.TestCase):
         kapitan("compile", "-t", "test-objects")
 
     def test_plain_ref_revealed(self):
-        "check plain refs are revealed in test-objects"
         for g in glob.glob("compiled/test-objects/*.json"):
             with open(g) as f:
                 self.assertTrue("?{plain:" not in f.read())
