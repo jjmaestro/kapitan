@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
-
 # Copyright 2019 The Kapitan Authors
 # SPDX-FileCopyrightText: 2020 The Kapitan Authors <kapitan-admins@googlegroups.com>
 #
 # SPDX-License-Identifier: Apache-2.0
-
-"""
-Pytest configuration and shared fixtures for Kapitan tests.
-Provides utilities for test isolation and parallel execution.
-"""
 
 import multiprocessing.pool as mp
 import os
@@ -24,7 +17,6 @@ import pytest
 
 from kapitan import cached
 from kapitan.cached import reset_cache
-
 
 # Base paths - these are read-only references
 TEST_PWD = os.getcwd()
